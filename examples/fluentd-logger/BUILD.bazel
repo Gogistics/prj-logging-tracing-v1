@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "fluentd-logger_lib",
+    srcs = ["app.go"],
+    importpath = "github.com/Gogistics/prj-logging-tracing-v1/examples/fluentd-logger",
+    visibility = ["//visibility:private"],
+    deps = ["@com_github_fluent_fluent_logger_golang//fluent"],
+)
+
+go_binary(
+    name = "fluentd-logger",
+    embed = [":fluentd-logger_lib"],
+    visibility = ["//visibility:public"],
+)
+
+# docker build
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
+
+container_image(
+    name = "v0.0.0",
+    base = "@alpine_linux_amd64//image",
+    entrypoint = [
+        "/fluentd-logger",
+    ],
+    files = [
+        ":fluentd-logger",
+    ],
+    repository = "alantai/prj-logging-tracing-v1",
+    visibility = ["//visibility:public"],
+)

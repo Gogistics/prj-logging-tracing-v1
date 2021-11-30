@@ -1,0 +1,10 @@
+# Note: import additional .bazelrc if needed
+
+# Relase should always be stamped with version control info.
+build --workspace_status_command=./utils/scripts/bazel-stamp.sh
+
+# A more useful defualt output
+query --output=label_kind
+
+# Default, failed tests don't print any result and just go to the log filters
+test --test_output=errors
